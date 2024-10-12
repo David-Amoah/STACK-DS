@@ -1,0 +1,3 @@
+C:/Users/unoda/CLionProjects/StackDS/cmake-build-debug/CMakeFiles/StackDS.dir
+C:/Users/unoda/CLionProjects/StackDS/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/unoda/CLionProjects/StackDS/cmake-build-debug/CMakeFiles/rebuild_cache.dir
