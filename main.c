@@ -28,15 +28,20 @@ int main() {
     for (i = 0; i < n; i++) {
         if (test_case_is_valid()) {
             printf("Yes\n");
+            clear_keyboard_buffer();
         }
         else {
-            printf("No\n");
+            printf("No\n");clear_keyboard_buffer();
+
         }
+
     }
 
-
+    //clear_keyboard_buffer();
     return 0;
 }
+
+
 
 
 
@@ -57,17 +62,14 @@ int test_case_is_valid(void) {
 
         if (new_chars == '{' || new_chars == '(' || new_chars == '[') {
             stack_push(hStack, new_chars);
-        }
-
-        else if (new_chars == '}' || new_chars == ')' || new_chars == ']') {
+        } else if (new_chars == '}' || new_chars == ')' || new_chars == ']') {
             //check to see if stack is empty
-
             if (stack_is_empty(hStack)) {
                 stack_destroy(&hStack);
+                return 0;
             }
 
             char top = stack_top(hStack, NULL);
-
 
 
             if ((new_chars == ')' && top != '(') ||
@@ -77,17 +79,18 @@ int test_case_is_valid(void) {
                 stack_destroy(&hStack);
                 return 0;
             }
+            stack_pop(hStack);
         }
 
         noc = scanf("%c", &new_chars);
-
-
     }
 
-    if (!stack_is_empty(hStack)) {
+    // check to see if there was something left on the stack that wasn't popped
+    if (stack_is_empty(hStack) == TRUE) {
         stack_destroy(&hStack);
-        return 0;
+        return 1;
     }
+
 
     stack_destroy(&hStack);
     return 1;
@@ -97,5 +100,9 @@ int test_case_is_valid(void) {
 
 void clear_keyboard_buffer(void) {
     char c;
-    while ((c= (char)getchar()) != '\n' && c != EOF);
+    int noc;
+    noc = scanf("%c", &c);
+    while (noc == 1 &&  c != '\n') {
+        noc = scanf("%c", &c);
+    }
 }

@@ -21,12 +21,20 @@ struct stack {
 typedef struct stack Stack;
 
 
+STACK stack_init_default(void) {
+    Stack* pStack;
+    pStack = (Stack*)malloc(sizeof(Stack));
+    if (pStack != NULL) {
+        pStack->head = NULL;
+    }
+    return pStack;
+}
+
 Status stack_push(STACK hStack, char val) {
     // we are going to push a new node onto the stack
     Stack* pStack = (Stack*)hStack;
 
-    Node* temp;
-    temp = (Node*)malloc(sizeof(Node));
+    Node* temp = (Node*)malloc(sizeof(Node));
     if (temp == NULL) {
         return FAILURE;
     }
@@ -38,19 +46,10 @@ Status stack_push(STACK hStack, char val) {
 
 Boolean stack_is_empty(STACK hStack) {
     //interface function, cast to the known type
-    Stack* pStack = (STACK*)(hStack);
+    Stack* pStack = (STACK*)hStack;
 
     //returns true if stack's head is NULL
     return (pStack->head == NULL) ? TRUE : FALSE;
-}
-
-STACK stack_init_default(void) {
-    Stack* pStack;
-    pStack = (Stack*)malloc(sizeof(Stack));
-    if (pStack != NULL) {
-        pStack->head = NULL;
-    }
-    return pStack;
 }
 
 // this destroys each node in the stack
@@ -62,7 +61,8 @@ void stack_destroy(STACK* phStack) {
         pStack->head = pStack->head->next;
         free(temp);
     }
-    phStack = NULL;
+    free(pStack);
+    *phStack = NULL;
 }
 
 Status stack_pop(STACK hStack) {
