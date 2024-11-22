@@ -8,17 +8,16 @@ Purpose: The purpose of this program is to blah blah blah
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Stack.h"
-
+#include "stack.h"
 
 int test_case_is_valid(void);
 void clear_keyboard_buffer(void);
 
 int main() {
 
-    int n; // takes the int number of strings
+    int n;
 
-    int i; // used for iteration
+    int i;
 
     scanf("%d", &n);
 
@@ -28,73 +27,16 @@ int main() {
     for (i = 0; i < n; i++) {
         if (test_case_is_valid()) {
             printf("Yes\n");
-            clear_keyboard_buffer();
         }
         else {
-            printf("No\n");clear_keyboard_buffer();
-
+            printf("No\n");
         }
-
     }
 
-    //clear_keyboard_buffer();
     return 0;
 }
 
 
-
-
-
-int test_case_is_valid(void) {
-
-    STACK hStack;
-    hStack = stack_init_default();
-    if (hStack == NULL) {
-        printf("Failed to allocate memory for hStack");
-        exit(1);
-    }
-
-    char new_chars;
-    int noc;
-    noc = scanf("%c", &new_chars);
-
-    while (noc == 1 && new_chars != '\n') {
-
-        if (new_chars == '{' || new_chars == '(' || new_chars == '[') {
-            stack_push(hStack, new_chars);
-        } else if (new_chars == '}' || new_chars == ')' || new_chars == ']') {
-            //check to see if stack is empty
-            if (stack_is_empty(hStack)) {
-                stack_destroy(&hStack);
-                return 0;
-            }
-
-            char top = stack_top(hStack, NULL);
-
-
-            if ((new_chars == ')' && top != '(') ||
-                (new_chars == '}' && top != '{') ||
-                (new_chars == ']' && top != '[')) {
-
-                stack_destroy(&hStack);
-                return 0;
-            }
-            stack_pop(hStack);
-        }
-
-        noc = scanf("%c", &new_chars);
-    }
-
-    // check to see if there was something left on the stack that wasn't popped
-    if (stack_is_empty(hStack) == TRUE) {
-        stack_destroy(&hStack);
-        return 1;
-    }
-
-
-    stack_destroy(&hStack);
-    return 1;
-}
 
 
 
@@ -106,3 +48,64 @@ void clear_keyboard_buffer(void) {
         noc = scanf("%c", &c);
     }
 }
+
+
+
+int test_case_is_valid(void) {
+    STACK hStack = NULL;
+    hStack = stack_init_default();
+
+    if (hStack == NULL) {
+        printf("Failed to allocate memory for hStack");
+        exit(1);
+    }
+
+    char ch;
+    int noc;
+    noc = scanf("%c", &ch);
+
+    while (noc == 1 && ch != '\n'){
+        if (ch == '(' || ch == '{' || ch == '[') {
+            stack_push(hStack,ch);
+        }
+        else if (ch == ')' || ch == '}' || ch == ']') {
+            if (stack_is_empty(hStack)) {
+                while (noc == 1 && ch != '\n') {
+                    noc = scanf("%c", &ch);
+                }
+                stack_destroy(&hStack);
+                return 0;
+            }
+
+            char top = stack_top(hStack,NULL);
+
+
+            if ((ch == ')' && top != '(') ||
+                (ch == ']' && top != '[') ||
+                (ch == '}' && top != '{')) {
+                while (noc == 1 && ch != '\n') {
+                    noc = scanf("%c", &ch);
+                }
+                stack_destroy(&hStack);
+                return 0;
+            }
+
+            stack_pop(hStack);
+        } else {
+            while (noc == 1 && ch != '\n') {
+                noc = scanf("%c", &ch);
+            }
+            return 0;
+        }
+
+        noc = scanf("%c", &ch);
+    }
+
+
+    int is_valid = stack_is_empty(hStack);
+    stack_destroy(&hStack);
+    return is_valid;
+}
+
+
+
